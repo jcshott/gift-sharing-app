@@ -1,6 +1,6 @@
 // import React from 'react';
 import { connect } from 'react-redux';
-import { addList, removeList } from '../actions';
+import { addList, removeList } from '../actions/actions';
 import UserLists from '../components/UserLists';
 
 function mapStateToProps(state) {
@@ -14,8 +14,8 @@ function mapDispatchToProps(dispatch) {
     onNewListClick: (name) => {
       dispatch(addList(name))
   },
-    onRemoveList: (index) => {
-        dispatch(removeList(index))
+    onRemoveList: (id) => {
+        dispatch(removeList(id))
     }
   }
 }

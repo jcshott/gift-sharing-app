@@ -8,8 +8,9 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
 
-app.get('/', function (req, res) {
+app.get('/*', (req, res) => {
   res.send('Hello World!')
+  // res.sendfile((path.resolve(__dirname, '../client', 'build', 'index.html'))
 });
 
 app.listen(app.get('port'), () => {
