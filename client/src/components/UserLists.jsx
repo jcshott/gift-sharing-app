@@ -1,11 +1,9 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
-// import CurrentListLink from '../containers/CurrentListLink';
-import { Link } from 'react-router';
+import ListLink from '../containers/ListLink';
 import NewList from './NewList';
 
 // container element for user's gift lists
-
 const UserLists = function({userLists, onNewListClick, onRemoveList}) {
     return (
     <div>
@@ -19,9 +17,9 @@ const UserLists = function({userLists, onNewListClick, onRemoveList}) {
                 }
             }}/>
         {_.map(userLists, (list) =>
-            <Link to={`/lists/${list.id}`} key={list.id}>
+            <ListLink listId={list.id} key={list.id}>
                 <p key={list.id}> {list.name} <button onClick={e => {onRemoveList(list.id)}}>X</button></p>
-            </Link>
+            </ListLink>
 
         )}
     </div>

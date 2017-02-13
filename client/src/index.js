@@ -1,19 +1,21 @@
+import 'babel-polyfill'
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Route, Router, browserHistory } from 'react-router';
 
-import store from './store';
+import configureStore from './store';
 import App from './containers/App';
-import VisibleGiftList from './containers/VisibleGiftList';
+import ListHandler from './containers/ListHandler';
 import './styles/index.css';
+
+const store = configureStore();
 
 ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
-            <Route path='/' component={App}>
-                <Route path='lists/:id' component={VisibleGiftList}/>
-            </Route>
+            <Route path='/' component={App} />
+            <Route path='list/:listId' component={ListHandler}/>
         </Router>
     </Provider>,
   document.getElementById('root')

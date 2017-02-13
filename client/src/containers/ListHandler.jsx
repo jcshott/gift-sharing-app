@@ -10,8 +10,9 @@ function getListItems (listItems, listId) {
 
 function mapStateToProps(state, ownProps) {
     return {
-        listItems: getListItems(state.listItems, _.parseInt(ownProps.listId)),
-        currentListId: _.parseInt(ownProps.listId),
+        listItems: getListItems(state.listItems, _.parseInt(ownProps.params.listId)),
+        currentListId: _.parseInt(ownProps.params.listId),
+        currentList: _.filter(state.userLists, (list) => list.id === _.parseInt(ownProps.params.listId))[0]
     }
 }
 

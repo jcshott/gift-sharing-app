@@ -14,8 +14,8 @@ function mapDispatchToProps(dispatch) {
     onNewListClick: (name) => {
       dispatch(addList(name))
   },
-    onRemoveList: (id) => {
-        dispatch(removeList(id))
+    onRemoveList: (listId) => {
+        dispatch(removeList(listId))
     }
   }
 }

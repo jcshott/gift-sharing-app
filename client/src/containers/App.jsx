@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Navbar from '../components/Navbar';
-import CurrentUserLists from '../containers/CurrentUserLists';
-import VisibleGiftList from '../containers/VisibleGiftList';
+import UserListsHandler from '../containers/UserListsHandler';
 
 // Main container element
 class App extends Component {
@@ -9,8 +8,7 @@ class App extends Component {
     return (
       <div className="App">
           <Navbar />
-          <CurrentUserLists />
-          <VisibleGiftList listId={this.props.params.id} />
+          <UserListsHandler />
       </div>
     );
   }

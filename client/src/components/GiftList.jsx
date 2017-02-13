@@ -2,11 +2,11 @@ import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import NewItem from './NewItem';
 
-const GiftList = function ({listItems, currentListId, onNewItemClick, onRemoveItem}) {
+const GiftList = function ({listItems, currentListId, currentList, onNewItemClick, onRemoveItem}) {
     return (
         <div>
             <h1>
-                Gift List
+                {currentList.name} List
             </h1>
             <NewItem onChange={e => {
                     if(e.keyCode === 13) {
@@ -25,6 +25,7 @@ const GiftList = function ({listItems, currentListId, onNewItemClick, onRemoveIt
 GiftList.propTypes = {
   listItems: PropTypes.array.isRequired,
   currentListId: PropTypes.number.isRequired,
+  currentList: PropTypes.object.isRequired,
   onNewItemClick: PropTypes.func.isRequired,
   onRemoveItem: PropTypes.func.isRequired
 }

@@ -1,5 +1,11 @@
 // import Immutable from 'immutable';
 import _ from 'lodash';
+import {
+    ADD_ITEM,
+    DELETE_ITEM,
+    ADD_LIST,
+    DELETE_LIST
+} from '../actions/actions';
 
 const initialState = {
   userLists: [{id: 1, name: 'test'}],
@@ -17,7 +23,7 @@ function getLastId(obj) {
 
 function app(state = initialState, action) {
     switch(action.type) {
-        case 'addList':
+        case ADD_LIST:
             return {
                 ...state,
                 userLists: [...state.userLists,
@@ -27,13 +33,13 @@ function app(state = initialState, action) {
                     }
                 ]
             }
-        case 'removeList':
+        case DELETE_LIST:
             return {
                 ...state,
                 userLists: _.filter(state.userLists, (lists, index) => lists.id !== action.id),
                 listItems: _.filter(state.listItems, (item, index) => item.listId !== action.id)
             };
-        case 'addItem':
+        case ADD_ITEM:
             return {
                 ...state,
                 listItems: [...state.listItems, {
@@ -43,7 +49,7 @@ function app(state = initialState, action) {
 
                 }]
             };
-        case 'deleteItem':
+        case DELETE_ITEM:
             return {
                 ...state,
                 listItems: _.filter(state.listItems, (item, index) => item.id !== action.id)

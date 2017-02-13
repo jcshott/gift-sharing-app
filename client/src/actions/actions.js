@@ -3,6 +3,10 @@
 // { type: 'FETCH_ITEMS_SUCCESS', response: { } }
 
 // export const REQUEST_ITEMS = 'REQUEST_ITEMS'
+export const ADD_ITEM = 'ADD_ITEM';
+export const DELETE_ITEM = 'DELETE_ITEM';
+export const ADD_LIST = 'ADD_LIST';
+export const DELETE_LIST = 'DELETE_LIST';
 //
 // function requestItems(listId) {
 //   return {
@@ -33,7 +37,7 @@
 
 export function addItem(item, listId) {
     return {
-        type: 'addItem',
+        type: ADD_LIST,
         item,
         listId
     }
@@ -41,21 +45,21 @@ export function addItem(item, listId) {
 
 export function deleteItem(id) {
     return {
-        type: 'deleteItem',
+        type: DELETE_ITEM,
         id
     }
 }
 
 export function addList(name) {
     return {
-        type: 'addList',
+        type: ADD_LIST,
         name
     }
 }
 
 export function removeList(id) {
     return {
-        type: 'removeList',
+        type: DELETE_LIST,
         id
     }
 }
