@@ -2,7 +2,9 @@ import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import {Button, Col, ControlLabel, Form, FormControl, FormGroup} from 'react-bootstrap';
-import { logIn } from '../actions/actions';
+// import { logIn } from '../actions/actions';
+import { fetchInformation } from '../actions/actions';
+
 
 class LogInForm extends React.Component {
   constructor(props) {
@@ -10,11 +12,16 @@ class LogInForm extends React.Component {
     this.submit = this.submit.bind(this);
   }
 
+  // componentDidMount(){
+  //   this.props.dispatch(fetchInformation({}));
+  // }
+
   submit(e) {
-    this.props.dispatch(logIn({username: this.email.value, 
-                              password: this.password.value
-                       })
-            )
+    e.preventDefault();
+    this.props.dispatch(fetchInformation(
+                        { username: this.email.value, 
+                          password: this.password.value
+                        }))
   }
 
   render() {
@@ -59,9 +66,15 @@ class LogInForm extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        currentUser: state.currentUser
+        currentUser: state.currentUser,
+        isUpdating: state.isUpdating,
     }
 }
 
-export default connect(mapStateToProps)(LogInForm);
+// function mapDispatchToProps(dispatch){
+//     return {
+//         fetchInformation: (user) => dispatch(fetchInformation(user))
+//     };
+// };
 
+export default connect(mapStateToProps)(LogInForm);

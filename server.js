@@ -8,8 +8,16 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
 
-app.get('/*', (req, res) => {
-  res.send('Hello World!')
+const userInfo = { currentUser: {username: 'test'},
+    userLists: [{id: 1, name: 'test'}],
+    listItems: [{id: 1, item: 'my Item', listId: 1}] 
+    }
+
+app.get('/userInfo', (req, res) => {
+  res.json({ currentUser: {username: 'test'},
+    userLists: [{id: 1, name: 'test'}],
+    listItems: [{id: 1, item: 'my Item', listId: 1}] 
+    })
   // res.sendfile((path.resolve(__dirname, '../client', 'build', 'index.html'))
 });
 

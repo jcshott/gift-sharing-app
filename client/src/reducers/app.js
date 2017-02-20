@@ -5,13 +5,16 @@ import {
     DELETE_ITEM,
     ADD_LIST,
     DELETE_LIST,
-    LOG_IN
+    LOG_IN,
+    RECEIVE_INFORMATION
 } from '../actions/actions';
 
+
 const initialState = {
+    isUpdating: false,
     currentUser: {},
-    userLists: [{id: 1, name: 'test'}],
-    listItems: [{id: 1, item: 'my Item', listId: 1}]
+    // userLists: [],
+    // listItems: []
 }
 
 function getLastId(obj) {
@@ -58,10 +61,15 @@ function app(state = initialState, action) {
         case LOG_IN:
             return {
                 ...state,
-                currentUser: {
-                    username: action.user.username,
-                    password: action.user.password
-                }
+                isUpdating: true
+            }
+        case RECEIVE_INFORMATION:
+            return {
+                ...state,
+                isUpdating: false,
+                currentUser: action.information.currentUser,
+                userLists: action.information.userLists,
+                listItems: action.information.listItems,
             }
         default:
             return state;

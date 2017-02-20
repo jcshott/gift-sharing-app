@@ -5,13 +5,13 @@ import { Provider } from 'react-redux';
 import { IndexRoute, Route, Router, browserHistory } from 'react-router';
 
 import store from './store';
+
 import App from './containers/App';
 import Home from './components/Home';
 import GiftListHandler from './containers/GiftListHandler';
 import UserListsHandler from './containers/UserListsHandler';
 import './styles/index.css';
 
-// const store = configureStore();
 
 ReactDOM.render(
     <Provider store={store}>

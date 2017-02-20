@@ -1,45 +1,37 @@
-// { type: 'FETCH_ITEMS_REQUEST' }
-// { type: 'FETCH_ITEMS_FAILURE', error: 'Oops' }
-// { type: 'FETCH_ITEMS_SUCCESS', response: { } }
+import fetch from 'isomorphic-fetch';
+import _ from 'lodash';
 
-// export const REQUEST_ITEMS = 'REQUEST_ITEMS'
+export const REQUEST_INFORMATION = 'REQUEST_INFORMATION';
+export const RECEIVE_INFORMATION = 'RECEIVE_INFORMATION';
 export const ADD_ITEM = 'ADD_ITEM';
 export const DELETE_ITEM = 'DELETE_ITEM';
 export const ADD_LIST = 'ADD_LIST';
 export const DELETE_LIST = 'DELETE_LIST';
 export const LOG_IN = 'LOG_IN';
-//
-// function requestItems(listId) {
-//   return {
-//     type: REQUEST_ITEMS,
-//     listId
-//   }
-// }
-//
-// export const SELECT_LIST = 'SELECT_LIST'
-//
-// export function selectList(listId) {
-//   return {
-//     type: SELECT_LIST,
-//     listId
-//   }
-// }
-//
-// export const RECEIVE_ITEMS = 'RECEIVE_ITEMS'
-//
-// function receiveItems(listId, json) {
-//   return {
-//     type: RECEIVE_ITEMS,
-//     listId,
-//     items: json.data.children.map(child => child.data),
-//     receivedAt: Date.now()
-//   }
-// }
 
-export function logIn(user) {
+
+export function fetchInformation(user) {
+    console.log("USER ", user)
+    if (!_.isEmpty(user)) {
+      return dispatch => {
+        dispatch(logIn())
+        return fetch(`/userInfo`)
+            .then(response => response.json())
+            .then(json => dispatch(receiveInformation(json)))
+      }
+  }
+}
+
+function receiveInformation(json) {
+  return {
+    type: RECEIVE_INFORMATION,
+    information: json,
+  }
+}
+
+function logIn() {
     return {
         type: LOG_IN,
-        user
     }
 }
 
