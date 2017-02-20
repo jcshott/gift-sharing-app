@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Navbar from '../components/Navbar';
-import UserListsHandler from '../containers/UserListsHandler';
 
 // Main container element
 class App extends Component {
@@ -8,8 +7,9 @@ class App extends Component {
     return (
       <div className="App">
           <Navbar />
-          <UserListsHandler />
+          {this.props.children}
       </div>
+
     );
   }
 }

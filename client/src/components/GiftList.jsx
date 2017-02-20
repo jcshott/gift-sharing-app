@@ -1,25 +1,34 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
+import { Button } from 'react-bootstrap';
 import NewItem from './NewItem';
 
-const GiftList = function ({listItems, currentListId, currentList, onNewItemClick, onRemoveItem}) {
+class GiftList extends React.Component {
+  // constructor(props) {
+  //   super(props);
+  // }
+
+  render() {
     return (
         <div>
             <h1>
-                {currentList.name} List
+                {this.props.currentList.name} List
             </h1>
-            <NewItem onChange={e => {
+            {_.map(this.props.listItems, (item) =>
+                  <p key={item.id}> {item.item} <Button bsSize="xsmall" onClick={ e => this.props.onRemoveItem(item.id)}>X</Button> </p>
+              )
+            }
+            <div>
+             <NewItem onChange={e => {
                     if(e.keyCode === 13) {
-                        onNewItemClick(e.target.value, currentListId)
+                        this.props.onNewItemClick(e.target.value, this.props.currentListId)
                         e.target.value=''
                     }
                 }}/>
-            {_.map(listItems, (item) =>
-                    <p key={item.id}> {item.item} <button onClick={ e => onRemoveItem(item.id)}>X</button></p>
-                )
-            }
+              </div>
         </div>
     )
+  }
 }
 
 GiftList.propTypes = {

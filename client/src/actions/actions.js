@@ -7,6 +7,7 @@ export const ADD_ITEM = 'ADD_ITEM';
 export const DELETE_ITEM = 'DELETE_ITEM';
 export const ADD_LIST = 'ADD_LIST';
 export const DELETE_LIST = 'DELETE_LIST';
+export const LOG_IN = 'LOG_IN';
 //
 // function requestItems(listId) {
 //   return {
@@ -35,9 +36,16 @@ export const DELETE_LIST = 'DELETE_LIST';
 //   }
 // }
 
+export function logIn(user) {
+    return {
+        type: LOG_IN,
+        user
+    }
+}
+
 export function addItem(item, listId) {
     return {
-        type: ADD_LIST,
+        type: ADD_ITEM,
         item,
         listId
     }

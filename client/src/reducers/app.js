@@ -4,13 +4,14 @@ import {
     ADD_ITEM,
     DELETE_ITEM,
     ADD_LIST,
-    DELETE_LIST
+    DELETE_LIST,
+    LOG_IN
 } from '../actions/actions';
 
 const initialState = {
-  userLists: [{id: 1, name: 'test'}],
-  listItems: [{id: 1, item: 'my Item', listId: 1}],
-  activeList: 0
+    currentUser: {},
+    userLists: [{id: 1, name: 'test'}],
+    listItems: [{id: 1, item: 'my Item', listId: 1}]
 }
 
 function getLastId(obj) {
@@ -54,10 +55,13 @@ function app(state = initialState, action) {
                 ...state,
                 listItems: _.filter(state.listItems, (item, index) => item.id !== action.id)
             };
-        case 'setCurrentListId':
+        case LOG_IN:
             return {
                 ...state,
-                activeList: action.id
+                currentUser: {
+                    username: action.user.username,
+                    password: action.user.password
+                }
             }
         default:
             return state;
