@@ -11,7 +11,6 @@ export const LOG_IN = 'LOG_IN';
 
 
 export function fetchInformation(user) {
-    console.log("USER ", user)
     if (!_.isEmpty(user)) {
       return dispatch => {
         dispatch(logIn())

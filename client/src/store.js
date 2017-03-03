@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware} from 'redux';
+// import combineReducers from 'redux-immutable';
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import app from './reducers/app';

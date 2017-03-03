@@ -5,7 +5,8 @@ import UserLists from '../components/UserLists';
 
 function mapStateToProps(state) {
     return {
-        userLists: state.userLists
+      // immutable list of objects
+        userLists: state.get('userLists')
     }
 }
 

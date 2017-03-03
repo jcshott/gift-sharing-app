@@ -1,4 +1,4 @@
-// import Immutable from 'immutable';
+import Immutable from 'immutable';
 import _ from 'lodash';
 import {
     ADD_ITEM,
@@ -10,67 +10,44 @@ import {
 } from '../actions/actions';
 
 
-const initialState = {
-    isUpdating: false,
-    currentUser: {},
-    // userLists: [],
-    // listItems: []
-}
-
 function getLastId(obj) {
     if (_.isEmpty(obj)) {
         return null;
     }
-    let lastItem = _.last(_.sortBy(obj, ['id']));
-    return lastItem.id;
+    let lastItem = obj.last()
+    return lastItem.get('id');
 }
 
-function app(state = initialState, action) {
+function app(state = Immutable.Map({currentUser: {}}), action) {
     switch(action.type) {
         case ADD_LIST:
-            return {
-                ...state,
-                userLists: [...state.userLists,
-                    {
-                        id: getLastId(state.userLists) ? getLastId(state.userLists) + 1 : 1,
-                        name: action.name
-                    }
-                ]
-            }
+            let new_list = Immutable.Map({
+                id: state.get('userLists') ? getLastId(state.get('userLists')) + 1 : 1, 
+                name: action.name
+            })
+            return state.set('userLists', state.get('userLists').push(new_list));
         case DELETE_LIST:
-            return {
-                ...state,
-                userLists: _.filter(state.userLists, (lists, index) => lists.id !== action.id),
-                listItems: _.filter(state.listItems, (item, index) => item.listId !== action.id)
-            };
+            let temp = state.withMutations(map => {
+                map.set('userLists', state.get('userLists').filter(l => l.get('id') !== action.id))
+                .set('listItems', state.get('listItems').filter(item => item.get('listId') !== action.id))
+            });
+            return temp.asImmutable();
         case ADD_ITEM:
-            return {
-                ...state,
-                listItems: [...state.listItems, {
-                    id: getLastId(state.listItems) ? getLastId(state.listItems) + 1 : 1,
+            let new_item = Immutable.Map({
+                    id: state.get('listItems') ? getLastId(state.get('listItems')) + 1 : 1,
                     item: action.item,
                     listId: action.listId
-
-                }]
-            };
+                })
+            return state.set('listItems', state.get('listItems').push(new_item));
         case DELETE_ITEM:
-            return {
-                ...state,
-                listItems: _.filter(state.listItems, (item, index) => item.id !== action.id)
-            };
+            return state.set('listItems', state.get('listItems').filter(item => item.get('id') !== action.id))
         case LOG_IN:
-            return {
-                ...state,
-                isUpdating: true
-            }
+            return state.set('isUpdating': true);
+
         case RECEIVE_INFORMATION:
-            return {
-                ...state,
-                isUpdating: false,
-                currentUser: action.information.currentUser,
-                userLists: action.information.userLists,
-                listItems: action.information.listItems,
-            }
+            let curr_info = Immutable.fromJS(action.information),
+                new_state = state.mergeDeep(curr_info)
+            return new_state.set('isUpdating', false);
         default:
             return state;
     }

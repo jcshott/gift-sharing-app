@@ -1,4 +1,4 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ListLink from '../containers/ListLink';
@@ -11,13 +11,13 @@ const UserLists = function({userLists, onNewListClick, onRemoveList}) {
         <h1>
             Current Gift Lists
         </h1>
-        {_.map(userLists, (list) =>
-            <div key={`list-${list.id}`}>
-                <p> {list.name}</p>
-                 <ListLink listId={list.id} key={list.id}>
+        {userLists.map((listObj) =>
+            <div key={`list-${listObj.get('id')}`}>
+                <p> {listObj.get('name')}</p>
+                 <ListLink listId={listObj.get('id')} key={listObj.get('id')}>
                     <Button>Manage List</Button> 
                 </ListLink>
-                <Button onClick={e => {onRemoveList(list.id)}}>Remove List </Button>
+                <Button onClick={e => {onRemoveList(listObj.get('id'))}}>Remove List </Button>
             </div>
         )}
          <NewList onChange={e => {
@@ -30,7 +30,7 @@ const UserLists = function({userLists, onNewListClick, onRemoveList}) {
 )}
 
 UserLists.propTypes = {
-  userLists: PropTypes.array.isRequired,
+  userLists: PropTypes.object.isRequired,
   onNewListClick: PropTypes.func.isRequired,
   onRemoveList: PropTypes.func.isRequired
 }

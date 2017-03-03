@@ -1,18 +1,19 @@
-// import React from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { addItem, deleteItem } from '../actions/actions';
 import GiftList from '../components/GiftList';
 
-function getListItems (listItems, listId) {
-    return _.filter(listItems, (item) => item.listId === listId)
+function getByListId(obj, listId) {
+    return obj.filter(function(item) { 
+      return item.includes(listId)})
 }
 
 function mapStateToProps(state, ownProps) {
+  // listItems = immutable.List(immutable.Map({}))
     return {
-        listItems: getListItems(state.listItems, _.parseInt(ownProps.params.listId)),
+        listItems: state.get('listItems') ? getByListId(state.get('listItems'), _.parseInt(ownProps.params.listId)) : null,
         currentListId: _.parseInt(ownProps.params.listId),
-        currentList: _.filter(state.userLists, (list) => list.id === _.parseInt(ownProps.params.listId))[0]
+        currentList: state.get('userLists') ? getByListId(state.get('userLists'), _.parseInt(ownProps.params.listId)) : null
     }
 }
 

@@ -12,10 +12,10 @@ class GiftList extends React.Component {
     return (
         <div>
             <h1>
-                {this.props.currentList.name} List
+                {this.props.currentList.get('name')} List
             </h1>
-            {_.map(this.props.listItems, (item) =>
-                  <p key={item.id}> {item.item} <Button bsSize="xsmall" onClick={ e => this.props.onRemoveItem(item.id)}>X</Button> </p>
+            {this.props.listItems.map((item) =>
+                  <p key={item.get('id')}> {item.get('item')} <Button bsSize="xsmall" onClick={ e => this.props.onRemoveItem(item.get('id'))}>X</Button> </p>
               )
             }
             <div>
@@ -32,7 +32,7 @@ class GiftList extends React.Component {
 }
 
 GiftList.propTypes = {
-  listItems: PropTypes.array.isRequired,
+  listItems: PropTypes.object.isRequired,
   currentListId: PropTypes.number.isRequired,
   currentList: PropTypes.object.isRequired,
   onNewItemClick: PropTypes.func.isRequired,
