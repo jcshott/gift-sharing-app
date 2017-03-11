@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import {Button, Col, ControlLabel, Form, FormControl, FormGroup} from 'react-bootstrap';
-import { fetchInformation } from '../actions/actions';
+import { signIn } from '../actions/actions';
 
 
 class LogInForm extends React.Component {
@@ -13,24 +13,24 @@ class LogInForm extends React.Component {
 
   submit(e) {
     e.preventDefault();
-    this.props.dispatch(fetchInformation(
-                        { username: this.email.value, 
+    this.props.dispatch(signIn(
+                        { username: this.username.value,
                           password: this.password.value
-                        }))
+                        }));
   }
 
   render() {
     if (_.isEmpty(this.props.currentUser)) {
       return (
          <Form horizontal onSubmit={this.submit}>
-            <FormGroup controlId="email">
+            <FormGroup controlId="formBasicText">
               <Col componentClass={ControlLabel} sm={2}>
-                Email
+                Username
               </Col>
               <Col sm={4}>
-                <FormControl inputRef={ref => { this.email = ref; }}
-                             type="email" 
-                             placeholder="Email" />
+                <FormControl inputRef={ref => { this.username = ref; }}
+                             type="text"
+                             placeholder="Username" />
               </Col>
             </FormGroup>
 

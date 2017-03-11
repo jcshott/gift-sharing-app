@@ -9,17 +9,33 @@ export const ADD_LIST = 'ADD_LIST';
 export const DELETE_LIST = 'DELETE_LIST';
 export const LOG_IN = 'LOG_IN';
 
-
-export function fetchInformation(user) {
-    if (!_.isEmpty(user)) {
-      return dispatch => {
-        dispatch(logIn())
-        return fetch(`/userInfo`)
-            .then(response => response.json())
-            .then(json => dispatch(receiveInformation(json)))
-      }
-  }
+export function signIn(formInfo) {
+    if (!_.isEmpty(formInfo)) {
+        return dispatch => {
+            dispatch(logIn());
+            return fetch(`/login`, {
+                method: 'post',
+                body: JSON.stringify(formInfo),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials: "same-origin"
+            })
+                .then(response => response.json())
+                .then(json => dispatch(receiveInformation(json)));
+        }
+    }
 }
+
+// export function fetchInformation() {
+//         return dispatch => {
+//             dispatch(logIn())
+//             return fetch(`/userInfo`)
+//                 .then(response => response.json())
+//                 .then(json => dispatch(receiveInformation(json)))
+//         }
+// }
 
 function receiveInformation(json) {
   return {

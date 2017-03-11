@@ -5,26 +5,32 @@
   "description": "server",
   "private": true,
   "babel": {
-     "presets": [
-       "es2015",
-       "stage-0"
-     ]
-   },
-   "dependencies": {
-     "babel-cli": "6.14.0",
-     "babel-core": "6.14.0",
-     "babel-preset-es2015": "6.14.0",
-     "babel-preset-stage-0": "6.5.0",
-     "express": "4.13.3",
-     "fs": "0.0.2"
-   },
-   "scripts": {
-     "start": "concurrently \"npm run server\" \"cd client && npm start\"",
-     "server": "babel-node server.js",
-     "client": "babel-node start-client.js",
-     "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1"
-   },
-   "devDependencies": {
-     "concurrently": "^3.1.0"
-   }
+    "presets": [
+      "es2015",
+      "stage-0"
+    ]
+  },
+  "dependencies": {
+    "babel-cli": "6.14.0",
+    "babel-core": "6.14.0",
+    "babel-preset-es2015": "6.14.0",
+    "babel-preset-stage-0": "6.5.0",
+    "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
+    "express": "4.13.3",
+    "express-session": "^1.15.1",
+    "fs": "0.0.2",
+    "lodash": "^4.17.4",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"cd client && npm start\"",
+    "server": "babel-node server.js",
+    "client": "babel-node start-client.js",
+    "dev": "echo \"This command has been deprecated. Use 'npm start'\" && exit 1"
+  },
+  "devDependencies": {
+    "concurrently": "^3.1.0"
+  }
 }
