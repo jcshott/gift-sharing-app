@@ -88,13 +88,67 @@ const UserInfo = [
     }
 ];
 
-// authentication route
+function addUser(userObj) {
+    let userId = Users.length + 1;
+    Users.push(
+        {
+            id: userId,
+            username: userObj.username,
+            password: userObj.password,
+            first: userObj.first,
+            last: userObj.last
+        }
+    );
+
+    UserInfo.push(
+        {
+            id: userId,
+            userLists: [],
+            listItems: [],
+        }
+    )
+}
+
+// authentication routes
 app.post('/login',
     passport.authenticate('local'),
     function(req, res) {
         res.redirect('/userInfo');
     }
 );
+
+app.get('/login', function(req, res, next) {
+    passport.authenticate('local', function(err, user, info) {
+        if (err) { return next(err); }
+        if (!user) { return res.redirect('/'); }
+        req.logIn(user, function(err) {
+            if (err) { return next(err); }
+            let user = req.user,
+                userInfo = _.find(UserInfo, (obj) => {
+                    return obj.id === user.id
+                });
+                return res.json({
+                    currentUser: {username: user.username},
+                    userLists: userInfo.userLists,
+                    listItems: userInfo.listItems
+                });
+        });
+    })(req, res, next);
+});
+
+app.post('/signup', function(req, res) {
+    let existing = _.find(Users, (obj) => {
+        return obj.username === req.body.username
+    });
+    if (existing) {
+        return res.json({info: "Sorry. That username already exists. Try again."});
+    }
+
+    addUser(req.body);
+    console.log("USERS: ", Users);
+    res.redirect('/login');
+
+});
 
 // if authenticated, this sends user's information
 app.get('/userInfo', (req, res) => {

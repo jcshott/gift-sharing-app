@@ -28,6 +28,26 @@ export function signIn(formInfo) {
     }
 }
 
+export function signUp(formInfo) {
+    if (!_.isEmpty(formInfo)) {
+        console.log(formInfo);
+        return dispatch => {
+            dispatch(logIn());
+            return fetch(`/signup`, {
+                method: 'post',
+                body: JSON.stringify(formInfo),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials: "same-origin"
+            })
+                .then(response => response.json())
+                .then(json => dispatch(receiveInformation(json)));
+        }
+    }
+}
+
 // export function fetchInformation() {
 //         return dispatch => {
 //             dispatch(logIn())

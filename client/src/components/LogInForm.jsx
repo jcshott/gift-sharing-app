@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import {Button, Col, ControlLabel, Form, FormControl, FormGroup} from 'react-bootstrap';
 import { signIn } from '../actions/actions';
 
@@ -22,37 +23,42 @@ class LogInForm extends React.Component {
   render() {
     if (_.isEmpty(this.props.currentUser)) {
       return (
-         <Form horizontal onSubmit={this.submit}>
-            <FormGroup controlId="formBasicText">
-              <Col componentClass={ControlLabel} sm={2}>
-                Username
-              </Col>
-              <Col sm={4}>
-                <FormControl inputRef={ref => { this.username = ref; }}
-                             type="text"
-                             placeholder="Username" />
-              </Col>
-            </FormGroup>
+          <div>
+          <div className="col-md-offset-3 login">
+             <Form horizontal onSubmit={this.submit}>
+                <FormGroup controlId="formBasicText">
+                  <Col componentClass={ControlLabel} sm={2}>
+                    Username
+                  </Col>
+                  <Col sm={4}>
+                    <FormControl inputRef={ref => { this.username = ref; }}
+                                 type="text"
+                                 placeholder="Username" />
+                  </Col>
+                </FormGroup>
 
-            <FormGroup controlId="password">
-              <Col componentClass={ControlLabel} sm={2}>
-                Password
-              </Col>
-              <Col sm={4}>
-                <FormControl inputRef={ref => { this.password = ref; }}
-                             type="password" 
-                             placeholder="Password" />
-              </Col>
-            </FormGroup>
+                <FormGroup controlId="password">
+                  <Col componentClass={ControlLabel} sm={2}>
+                    Password
+                  </Col>
+                  <Col sm={4}>
+                    <FormControl inputRef={ref => { this.password = ref; }}
+                                 type="password"
+                                 placeholder="Password" />
+                  </Col>
+                </FormGroup>
 
-            <FormGroup>
-              <Col smOffset={2} sm={4}>
-                <Button type="submit">
-                  Sign in
-                </Button>
-              </Col>
-            </FormGroup>
-          </Form>
+                <FormGroup>
+                  <Col smOffset={2} sm={4}>
+                    <Button type="submit">
+                      Sign in
+                    </Button>
+                  </Col>
+                </FormGroup>
+              </Form>
+          </div>
+              <span> New to the site?  <Link to={`signup`}> Sign-up for an account! </Link> </span>
+          </div>
       )
     }
     return null;

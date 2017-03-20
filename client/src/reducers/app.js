@@ -18,7 +18,7 @@ function getLastId(obj) {
     return lastItem.get('id');
 }
 
-function app(state = Immutable.Map({currentUser: {}}), action) {
+function app(state = Immutable.Map({}), action) {
     switch(action.type) {
         case ADD_LIST:
             let new_list = Immutable.Map({

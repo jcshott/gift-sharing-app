@@ -8,6 +8,7 @@ import store from './store';
 
 import App from './containers/App';
 import Home from './components/Home';
+import SignUpForm from './components/SignUpForm';
 import GiftListHandler from './containers/GiftListHandler';
 import UserListsHandler from './containers/UserListsHandler';
 import './styles/index.css';
@@ -18,6 +19,7 @@ ReactDOM.render(
         <Router history={browserHistory}>
             <Route path='/' component={App}>
             	<IndexRoute component={Home} />
+                <Route path='signup' component={SignUpForm} />
             	<Route path='lists' component={UserListsHandler} />
             	<Route path='lists/:listId' component={GiftListHandler} />
             </Route>
