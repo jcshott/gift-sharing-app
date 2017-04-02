@@ -8,10 +8,14 @@ class Navbar extends Component {
 		return (
 		  <div className="App">
 			  <Nav bsStyle="tabs" activeKey="1">
+				  <LinkContainer to={{ pathname: '/'}}>
+					  <NavItem>Home</NavItem>
+				  </LinkContainer>
 				<LinkContainer to={{ pathname: '/lists'}}>
 				 	<NavItem>Go to Your Lists</NavItem>
 				 </LinkContainer>
 			  </Nav>
+
 		  </div>
 		);
 	}

@@ -8,7 +8,7 @@ class Home extends React.Component {
       if (this.props.currentUser) {
           return (
               <div>
-                  Welcome back {this.props.currentUser.get('username')}
+                  Welcome back {this.props.currentUser.get('first')}
               </div>
           )
       }

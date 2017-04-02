@@ -22,6 +22,7 @@ class SignUpForm extends React.Component {
     }
 
     render() {
+        if (_.isEmpty(this.props.currentUser)) {
             return (
                 <Form horizontal onSubmit={this.submit}>
                     <FormGroup controlId="formBasicText">
@@ -29,9 +30,11 @@ class SignUpForm extends React.Component {
                             First Name
                         </Col>
                         <Col sm={4}>
-                            <FormControl inputRef={ref => { this.first = ref; }}
+                            <FormControl inputRef={ref => {
+                                this.first = ref;
+                            }}
                                          type="text"
-                                         placeholder="First" />
+                                         placeholder="First"/>
                         </Col>
                     </FormGroup>
 
@@ -40,9 +43,11 @@ class SignUpForm extends React.Component {
                             Last Name
                         </Col>
                         <Col sm={4}>
-                            <FormControl inputRef={ref => { this.last = ref; }}
+                            <FormControl inputRef={ref => {
+                                this.last = ref;
+                            }}
                                          type="text"
-                                         placeholder="Last" />
+                                         placeholder="Last"/>
                         </Col>
                     </FormGroup>
 
@@ -51,9 +56,11 @@ class SignUpForm extends React.Component {
                             Choose a Username
                         </Col>
                         <Col sm={4}>
-                            <FormControl inputRef={ref => { this.username = ref; }}
+                            <FormControl inputRef={ref => {
+                                this.username = ref;
+                            }}
                                          type="text"
-                                         placeholder="Username" />
+                                         placeholder="Username"/>
                         </Col>
                     </FormGroup>
 
@@ -62,9 +69,11 @@ class SignUpForm extends React.Component {
                             Choose a Password
                         </Col>
                         <Col sm={4}>
-                            <FormControl inputRef={ref => { this.password = ref; }}
+                            <FormControl inputRef={ref => {
+                                this.password = ref;
+                            }}
                                          type="password"
-                                         placeholder="Password" />
+                                         placeholder="Password"/>
                         </Col>
                     </FormGroup>
 
@@ -77,6 +86,7 @@ class SignUpForm extends React.Component {
                     </FormGroup>
                 </Form>
             )
+        }
     }
 }
 

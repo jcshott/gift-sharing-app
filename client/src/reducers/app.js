@@ -45,7 +45,7 @@ function app(state = Immutable.Map({}), action) {
             return state.set('isUpdating', true);
         case RECEIVE_INFORMATION:
             let curr_info = Immutable.fromJS(action.information),
-                new_state = state.mergeDeep(curr_info)
+                new_state = state.mergeDeep(curr_info);
             return new_state.set('isUpdating', false);
         default:
             return state;

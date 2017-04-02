@@ -1,164 +1,87 @@
-var _ = require('lodash');
-var express = require('express');
-var session = require('express-session');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var passport = require('passport');
-var localStrategy = require('passport-local').Strategy;
+import _ from 'lodash';
+import express from 'express';
+import session from 'express-session'
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 
+// db & queries
+import * as db from './utils/queries';
 
+const app = express();
 
-// TODO: better error handling of looking up user for both configuring localStrategy & session handling
-// configure authentication
-// if authorized, user will be user obj {id: num, username: "", password: ""}
-passport.use(new localStrategy(
-    function(username, password, done) {
-        let user = _.find(Users, (u) => u.username === username);
-        if (!user) {
-            return done(null, false);
-        }
-        if (user.password !== password) {
-            return done(null, false);
-        }
-        // done is callback(error, user-to-add-to-session, opt: {message: " "} if want to flash message)
-        return done(null, user);
-    }
-));
-
-// tell passport how to serialize and deserialize user instances to and from the session.
-// The typical implementation of this is as simple as supplying the user ID when
-// serializing, and querying the user record by ID from the database when deserializing.
-passport.serializeUser(function(user, done) {
-    // done callback function (error, user.id to store in session)
-    done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-    //find the user by id
-    let user = _.find(Users, (u) => u.id === id);
-    if (!user) {
-        done('error', null);
-    } else {
-        done(null, user);
-    }
-});
-
-
-var app = express();
-
-
+// environment
 app.set('port', (process.env.PORT || 3001));
 
 app.use(cookieParser('keyboard cat'));
 app.use(bodyParser());
 app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false  }));
-app.use(passport.initialize());
-app.use(passport.session());
-
 
 // Express only serves static assets in production
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
+    app.use(express.static('client/build'));
 }
 
-// test users & lists
-const Users = [
-   {
-        id: 1,
-        username: 'test',
-        password: 'testing'
-    },
-    {
-        id: 2,
-        username: 'rocky',
-        password: 'walks'
-    }
-];
+// authentication
+// import passport from 'passport';
+// import flash from 'connect-flash';
+// var localPassport = require('./config/passport')(passport);
+//
+// app.use(passport.initialize());
+// app.use(passport.session());
+// app.use(flash());
 
-const UserInfo = [
-    {
-        id: 1,
-        userLists: [{id: 1, name: 'testList'}],
-        listItems: [{id: 1, item: 'my Item', listId: 1}]
-    },
-    {
-        id: 2,
-        userLists: [{id: 1, name: '2testList'}],
-        listItems: [{id: 1, item: 'someone else\'s Item', listId: 1}]
-    }
-];
 
-function addUser(userObj) {
-    let userId = Users.length + 1;
-    Users.push(
-        {
-            id: userId,
-            username: userObj.username,
-            password: userObj.password,
-            first: userObj.first,
-            last: userObj.last
-        }
-    );
+////// Routes //////
 
-    UserInfo.push(
-        {
-            id: userId,
-            userLists: [],
-            listItems: [],
-        }
-    )
-}
-
-// authentication routes
-app.post('/login',
-    passport.authenticate('local'),
-    function(req, res) {
-        res.redirect('/userInfo');
-    }
-);
-
-app.get('/login', function(req, res, next) {
-    passport.authenticate('local', function(err, user, info) {
-        if (err) { return next(err); }
-        if (!user) { return res.redirect('/'); }
-        req.logIn(user, function(err) {
-            if (err) { return next(err); }
-            let user = req.user,
-                userInfo = _.find(UserInfo, (obj) => {
-                    return obj.id === user.id
-                });
+app.post('/login', (req, res, next) => {
+    db.getUserbyUsername(req.body.username)
+        .then(function (userInfo) {
                 return res.json({
-                    currentUser: {username: user.username},
-                    userLists: userInfo.userLists,
-                    listItems: userInfo.listItems
+                    currentUser: {username: userInfo.username},
+                    userLists: [],
+                    listItems: []
                 });
-        });
-    })(req, res, next);
+        })
+        .catch(error => {
+                return res.json({
+                    currentUser: {}
+                });
+    })
 });
 
-app.post('/signup', function(req, res) {
-    let existing = _.find(Users, (obj) => {
-        return obj.username === req.body.username
-    });
-    if (existing) {
-        return res.json({info: "Sorry. That username already exists. Try again."});
-    }
-
-    addUser(req.body);
-    console.log("USERS: ", Users);
-    res.redirect('/login');
-
+app.post('/signup', (req, res, next) => {
+    db.getUserbyUsername(req.body.username)
+        .then(userInfo => {
+            if (userInfo) {
+                // TODO: handle sending message back to user that username is taken
+                return res.json({
+                    currentUser: {}
+                })
+            }
+            return db.addUser(req.body);
+        })
+        .then(newUser => {
+            return res.json({
+                currentUser: {username: newUser.username},
+                userLists: [],
+                listItems: []
+            });
+        })
+        // TODO: better error handling
+        .catch(err => {
+            return res.json({
+                currentUser: {}
+            });
+        })
 });
 
-// if authenticated, this sends user's information
+
 app.get('/userInfo', (req, res) => {
     let user = req.user;
     if (!user) {
         res.json({ currentUser: {}});
     } else {
-        let userInfo = _.find(UserInfo, (obj) => {
-            return obj.id === user.id
-        });
+        let userInfo = getUserbyId(user.id);
 
         res.json({
             currentUser: {username: user.username},
@@ -167,6 +90,9 @@ app.get('/userInfo', (req, res) => {
         });
     }
 });
+
+
+
 
 //   // res.sendfile((path.resolve(__dirname, '../client', 'build', 'index.html'))
 // });

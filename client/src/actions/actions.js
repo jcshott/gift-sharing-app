@@ -30,7 +30,6 @@ export function signIn(formInfo) {
 
 export function signUp(formInfo) {
     if (!_.isEmpty(formInfo)) {
-        console.log(formInfo);
         return dispatch => {
             dispatch(logIn());
             return fetch(`/signup`, {
