@@ -20,13 +20,13 @@ class UserLists  extends React.Component {
                             <Button>Manage List</Button>
                         </ListLink>
                         <Button onClick={e => {
-                            this.props.onRemoveList(listObj.get('id'))
+                            this.props.onRemoveList(listObj.get('id'), this.props.currentUser.get('userId'))
                         }}>Remove List </Button>
                     </div>
                 )}
                 <NewList onChange={e => {
                     if (e.keyCode === 13) {
-                        this.props.onNewListClick(e.target.value)
+                        this.props.onNewListClick(e.target.value, this.props.currentUser.get('userId'));
                         e.target.value = ''
                     }
                 }}/>
@@ -37,7 +37,9 @@ class UserLists  extends React.Component {
 UserLists.propTypes = {
   userLists: PropTypes.object.isRequired,
   onNewListClick: PropTypes.func.isRequired,
-  onRemoveList: PropTypes.func.isRequired
-}
+  onRemoveList: PropTypes.func.isRequired,
+  currentUser: PropTypes.object.isRequired,
+
+};
 
 export default UserLists

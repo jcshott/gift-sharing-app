@@ -1,21 +1,30 @@
 import _ from 'lodash';
-import React, { PropTypes } from 'react';
+import React, {PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import NewItem from './NewItem';
 
+
 class GiftList extends React.Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+
+  componentDidMount(){
+      this.props.onFetchItems(this.props.currentListId);
+  }
 
   render() {
+      if (_.isEmpty(this.props.listItems)) {
+          return (
+              <div>Looking up list</div>
+          )
+      }
     return (
         <div>
             <h1>
                 {this.props.currentList.get('name')} List
             </h1>
             {this.props.listItems.map((item) =>
-                  <p key={item.get('id')}> {item.get('item')} <Button bsSize="xsmall" onClick={ e => this.props.onRemoveItem(item.get('id'))}>X</Button> </p>
+                  <p key={item.get('id')}> {item.get('description')} <Button bsSize="xsmall"
+                                                                             onClick={ e => this.props.onRemoveItem(item.get('id'))}>X</Button>
+                  </p>
               )
             }
             <div>
@@ -32,11 +41,12 @@ class GiftList extends React.Component {
 }
 
 GiftList.propTypes = {
-  listItems: PropTypes.object.isRequired,
-  currentListId: PropTypes.number.isRequired,
-  currentList: PropTypes.object.isRequired,
+  listItems: PropTypes.object,
+  currentListId: PropTypes.number,
+  currentList: PropTypes.object,
   onNewItemClick: PropTypes.func.isRequired,
-  onRemoveItem: PropTypes.func.isRequired
-}
+  onRemoveItem: PropTypes.func.isRequired,
+  onFetchItems: PropTypes.func
+};
 
 export default GiftList;

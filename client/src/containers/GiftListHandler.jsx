@@ -1,17 +1,21 @@
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { addItem, deleteItem } from '../actions/actions';
+import { addItem, removeItem, fetchItems } from '../actions/actions';
 import GiftList from '../components/GiftList';
 
 function getByListId(obj, listId) {
-    return obj.filter(function(item) { 
-      return item.includes(listId)})
+    // filter list
+    return obj.find(function(obj){return obj.get('id') === listId;});
 }
+//
+// function filterItemsByListId(obj, listId) {
+//     return obj.filter(function(obj){return obj.get('list_id') === listId;});
+// }
 
 function mapStateToProps(state, ownProps) {
   // listItems = immutable.List(immutable.Map({}))
     return {
-        listItems: state.get('listItems') ? getByListId(state.get('listItems'), _.parseInt(ownProps.params.listId)) : null,
+        listItems: state.get('listItems'),
         currentListId: _.parseInt(ownProps.params.listId),
         currentList: state.get('userLists') ? getByListId(state.get('userLists'), _.parseInt(ownProps.params.listId)) : null
     }
@@ -19,12 +23,16 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onNewItemClick: (name, listId) => {
-      dispatch(addItem(name, listId))
-  },
+    onNewItemClick: (description, listId) => {
+        dispatch(addItem({description: description}, listId))
+    },
     onRemoveItem: (id) => {
-        dispatch(deleteItem(id))
-    }
+        dispatch(removeItem(id))
+    },
+    onFetchItems: (listId) => {
+        dispatch(fetchItems(listId))
+
+    },
   }
 }
 

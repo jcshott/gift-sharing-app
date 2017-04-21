@@ -6,18 +6,25 @@ import UserLists from '../components/UserLists';
 function mapStateToProps(state) {
     return {
       // immutable list of objects
-        userLists: state.get('userLists')
+        userLists: state.get('userLists'),
+        currentUser: state.get('currentUser')
     }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    onNewListClick: (name) => {
-      dispatch(addList(name))
+    onNewListClick: (name, userId) => {
+      dispatch(addList({name: name,
+                        userId: userId
+                        })
+      )
   },
-    onRemoveList: (listId) => {
-        dispatch(removeList(listId))
-    }
+    onRemoveList: (listId, userId) => {
+        dispatch(removeList({listId: listId,
+                             userId: userId
+                            })
+        )
+    },
   }
 }
 

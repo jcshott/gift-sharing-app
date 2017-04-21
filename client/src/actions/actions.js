@@ -1,18 +1,22 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'lodash';
 
-export const REQUEST_INFORMATION = 'REQUEST_INFORMATION';
+export const REQUESTING_INFORMATION = 'REQUESTING_INFORMATION';
 export const RECEIVE_INFORMATION = 'RECEIVE_INFORMATION';
-export const ADD_ITEM = 'ADD_ITEM';
-export const DELETE_ITEM = 'DELETE_ITEM';
-export const ADD_LIST = 'ADD_LIST';
-export const DELETE_LIST = 'DELETE_LIST';
-export const LOG_IN = 'LOG_IN';
+export const UPDATE_ITEMS = 'UPDATE_ITEMS';
+export const LOGGING_IN = 'LOGGING_IN';
+export const ERROR = 'ERROR';
+
+
+const LIST_URL = '/userLists';
+const ITEMS_URL = '/listItems/<listId>';
+
+////////// USER ACTIONS /////////////////
 
 export function signIn(formInfo) {
     if (!_.isEmpty(formInfo)) {
         return dispatch => {
-            dispatch(logIn());
+            dispatch(loggingIn());
             return fetch(`/login`, {
                 method: 'post',
                 body: JSON.stringify(formInfo),
@@ -23,7 +27,8 @@ export function signIn(formInfo) {
                 credentials: "same-origin"
             })
                 .then(response => response.json())
-                .then(json => dispatch(receiveInformation(json)));
+                .then(json => dispatch(receiveInformation(json)))
+                .catch(err => dispatch(errorReceived(err)));
         }
     }
 }
@@ -31,7 +36,7 @@ export function signIn(formInfo) {
 export function signUp(formInfo) {
     if (!_.isEmpty(formInfo)) {
         return dispatch => {
-            dispatch(logIn());
+            dispatch(loggingIn());
             return fetch(`/signup`, {
                 method: 'post',
                 body: JSON.stringify(formInfo),
@@ -42,19 +47,112 @@ export function signUp(formInfo) {
                 credentials: "same-origin"
             })
                 .then(response => response.json())
-                .then(json => dispatch(receiveInformation(json)));
+                .then(json => dispatch(receiveInformation(json)))
+                .catch(err => dispatch(errorReceived(err)));
         }
     }
 }
 
-// export function fetchInformation() {
-//         return dispatch => {
-//             dispatch(logIn())
-//             return fetch(`/userInfo`)
-//                 .then(response => response.json())
-//                 .then(json => dispatch(receiveInformation(json)))
-//         }
-// }
+
+function loggingIn() {
+    return {
+        type: LOGGING_IN,
+    }
+}
+
+////////// LIST ACTIONS /////////////////
+
+export function addList(listInfo) {
+    return dispatch => {
+        dispatch(requestingInformation());
+        return fetch(LIST_URL, {
+            method: 'post',
+            body: JSON.stringify(listInfo),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: "same-origin"
+        })
+            .then(response => response.json())
+            .then(json => dispatch(receiveInformation(json)))
+            .catch(err => dispatch(errorReceived(err)));
+    }
+}
+
+export function removeList(listInfo) {
+    return dispatch =>{
+        dispatch(requestingInformation());
+        return fetch(LIST_URL, {
+            method: 'delete',
+            body: JSON.stringify(listInfo),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: "same-origin"
+        })
+            .then(response => response.json())
+            .then(json => dispatch(receiveInformation(json)))
+            .catch(err => dispatch(errorReceived(err)));
+    }
+}
+
+
+export function fetchItems(listId) {
+    return dispatch => {
+        dispatch(requestingInformation());
+        return fetch(ITEMS_URL.replace('<listId>',listId))
+            .then(response => response.json())
+            .then(json => dispatch(updateItems(json)))
+            .catch(err => dispatch(errorReceived(err)));
+    }
+}
+
+export function addItem(itemInfo, listId) {
+    return dispatch => {
+        dispatch(requestingInformation());
+        return fetch(ITEMS_URL.replace('<listId>',listId), {
+            method: 'post',
+            body: JSON.stringify(itemInfo),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: "same-origin"
+        })
+            .then(response => response.json())
+            .then(json => dispatch(updateItems(json)))
+            .catch(err => dispatch(errorReceived(err)));
+    }
+}
+
+export function removeItem(itemId) {
+    return dispatch =>{
+        dispatch(requestingInformation());
+        return fetch(ITEMS_URL, {
+            method: 'delete',
+            body: JSON.stringify({itemId: itemId}),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: "same-origin"
+        })
+            .then(response => response.json())
+            .then(json => dispatch(updateItems(json)))
+            .catch(err => dispatch(errorReceived(err)));
+    }
+}
+
+function updateItems(json) {
+    return {
+        type: UPDATE_ITEMS,
+        information: json,
+    }
+}
+
+////////// HELPER ACTIONS /////////////////
 
 function receiveInformation(json) {
   return {
@@ -63,44 +161,16 @@ function receiveInformation(json) {
   }
 }
 
-function logIn() {
+function requestingInformation() {
     return {
-        type: LOG_IN,
+        type: REQUESTING_INFORMATION
     }
 }
 
-export function addItem(item, listId) {
+function errorReceived(error) {
     return {
-        type: ADD_ITEM,
-        item,
-        listId
+        type: ERROR,
+        information: error
     }
 }
 
-export function deleteItem(id) {
-    return {
-        type: DELETE_ITEM,
-        id
-    }
-}
-
-export function addList(name) {
-    return {
-        type: ADD_LIST,
-        name
-    }
-}
-
-export function removeList(id) {
-    return {
-        type: DELETE_LIST,
-        id
-    }
-}
-
-export function setCurrentListId(id) {
-    return {
-        type: 'setCurrentListId',
-        id
-    }
-}
