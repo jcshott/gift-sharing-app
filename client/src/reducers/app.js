@@ -24,7 +24,7 @@ function app(state = Immutable.Map({}), action) {
                 new_item_state = state.set('listItems', listItems.get('listItems'));
             return new_item_state.set('isUpdating', false);
         case ERROR:
-            return state.merge(Immutable.Map({'isUpdating': false, 'error': action.error}));
+            return state.merge(Immutable.Map({'isUpdating': false, 'error': action.information}));
         default:
             return state;
     }

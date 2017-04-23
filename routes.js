@@ -12,7 +12,7 @@ router.post('/login', (req, res, next) => {
         .then(userInfo => {
             user = userInfo;
             if(userInfo.password !== req.body.password) {
-                next("wrong password");
+                throw new Error('PASSWORD_ERROR');
             }
             return db.getUserLists(userInfo.id);
         })
@@ -24,8 +24,7 @@ router.post('/login', (req, res, next) => {
         })
         // TODO: better error handling
         .catch(error => {
-            console.error("ERROR in log-in route: ", error);
-            next(error);
+            return res.status(400).json({error: error});
         })
 });
 

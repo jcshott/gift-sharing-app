@@ -1,6 +1,10 @@
 import fetch from 'isomorphic-fetch';
 import _ from 'lodash';
 
+import {
+    ERROR_CODES,
+} from '../constants/errors';
+
 export const REQUESTING_INFORMATION = 'REQUESTING_INFORMATION';
 export const RECEIVE_INFORMATION = 'RECEIVE_INFORMATION';
 export const UPDATE_ITEMS = 'UPDATE_ITEMS';
@@ -26,9 +30,10 @@ export function signIn(formInfo) {
                 },
                 credentials: "same-origin"
             })
+                .then(response => handleErrors(response))
                 .then(response => response.json())
                 .then(json => dispatch(receiveInformation(json)))
-                .catch(err => dispatch(errorReceived(err)));
+                .catch((err) => dispatch(errorReceived(err.message)));
         }
     }
 }
@@ -46,6 +51,7 @@ export function signUp(formInfo) {
                 },
                 credentials: "same-origin"
             })
+                .then(response => handleErrors(response))
                 .then(response => response.json())
                 .then(json => dispatch(receiveInformation(json)))
                 .catch(err => dispatch(errorReceived(err)));
@@ -123,7 +129,7 @@ export function addItem(itemInfo, listId) {
         })
             .then(response => response.json())
             .then(json => dispatch(updateItems(json)))
-            .catch(err => dispatch(errorReceived(err)));
+            .catch((err) => dispatch(errorReceived(err)));
     }
 }
 
@@ -167,10 +173,18 @@ function requestingInformation() {
     }
 }
 
-function errorReceived(error) {
+function errorReceived(errorCode) {
     return {
         type: ERROR,
-        information: error
+        information: ERROR_CODES[errorCode]
     }
 }
 
+/// fetch doesn't throw an error if it receives an error status code from server
+//// see: https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
+function handleErrors(response) {
+    if (!response.ok) {
+        throw Error(response.status);
+    }
+    return response;
+}

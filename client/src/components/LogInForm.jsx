@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import {Button, Col, ControlLabel, Form, FormControl, FormGroup} from 'react-bootstrap';
+import {Button, Col, ControlLabel, Form, FormControl, FormGroup, HelpBlock} from 'react-bootstrap';
 import { signIn } from '../actions/actions';
 
 
@@ -21,7 +21,11 @@ class LogInForm extends React.Component {
   }
 
   renderLogInForm (error) {
-      let valid = error ? 'error' : null;
+      let valid = error ? 'error' : null,
+          errorMsg;
+      if(valid !== null) {
+          errorMsg = <HelpBlock>Password does not match - please try again.</HelpBlock>
+      }
       return (
       <div>
           <div className="col-md-offset-3 login">
@@ -45,6 +49,7 @@ class LogInForm extends React.Component {
                           <FormControl inputRef={ref => { this.password = ref; }}
                                        type="password"
                                        placeholder="Password" />
+                          {errorMsg}
                       </Col>
                   </FormGroup>
 

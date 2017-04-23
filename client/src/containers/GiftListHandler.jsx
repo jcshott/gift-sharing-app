@@ -7,10 +7,6 @@ function getByListId(obj, listId) {
     // filter list
     return obj.find(function(obj){return obj.get('id') === listId;});
 }
-//
-// function filterItemsByListId(obj, listId) {
-//     return obj.filter(function(obj){return obj.get('list_id') === listId;});
-// }
 
 function mapStateToProps(state, ownProps) {
   // listItems = immutable.List(immutable.Map({}))

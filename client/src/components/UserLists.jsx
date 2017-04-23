@@ -5,7 +5,7 @@ import ListLink from '../containers/ListLink';
 import NewList from './NewList';
 
 // actual component for the list of lists
-class UserLists  extends React.Component {
+class UserLists extends React.Component {
 
     render() {
         return (

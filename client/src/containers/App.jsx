@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Navbar from '../components/Navbar';
+// import UserError from '../components/UserErrors';
 
+// {this.props.errors &&
+// <UserErrors errors={errors} />
+// }
 // Main container element
 class App extends Component {
   render() {
@@ -14,4 +19,8 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(
+    state => ({
+        errors: state.get('errors'),
+    })
+)(App);
