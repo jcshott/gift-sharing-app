@@ -22,8 +22,8 @@ function mapDispatchToProps(dispatch) {
     onNewItemClick: (description, listId) => {
         dispatch(addItem({description: description}, listId))
     },
-    onRemoveItem: (id) => {
-        dispatch(removeItem(id))
+    onRemoveItem: (itemId, listId) => {
+        dispatch(removeItem(itemId, listId))
     },
     onFetchItems: (listId) => {
         dispatch(fetchItems(listId))

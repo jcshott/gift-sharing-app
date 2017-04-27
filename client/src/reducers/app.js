@@ -4,6 +4,7 @@ import Immutable from 'immutable';
 import {
     ERROR,
     LOGGING_IN,
+    LOG_OUT,
     RECEIVE_INFORMATION,
     REQUESTING_INFORMATION,
     UPDATE_ITEMS
@@ -16,15 +17,15 @@ function app(state = Immutable.Map({}), action) {
         case REQUESTING_INFORMATION:
             return state.set('isUpdating', false);
         case RECEIVE_INFORMATION:
-            let new_info = Immutable.fromJS(action.information),
-                new_state = state.mergeDeep(new_info);
-            return new_state.set('isUpdating', false);
+            let newInfo = Immutable.fromJS(action.information);
+                return state.merge(newInfo).set('isUpdating', false);
         case UPDATE_ITEMS:
-            let listItems = Immutable.fromJS(action.information),
-                new_item_state = state.set('listItems', listItems.get('listItems'));
-            return new_item_state.set('isUpdating', false);
+            let listItems = Immutable.fromJS(action.information);
+            return state.set('listItems', listItems.get('listItems')).set('isUpdating', false);
         case ERROR:
             return state.merge(Immutable.Map({'isUpdating': false, 'error': action.information}));
+        case LOG_OUT:
+            return state.clear();
         default:
             return state;
     }

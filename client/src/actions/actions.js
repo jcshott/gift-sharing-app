@@ -9,6 +9,7 @@ export const REQUESTING_INFORMATION = 'REQUESTING_INFORMATION';
 export const RECEIVE_INFORMATION = 'RECEIVE_INFORMATION';
 export const UPDATE_ITEMS = 'UPDATE_ITEMS';
 export const LOGGING_IN = 'LOGGING_IN';
+export const LOG_OUT = 'LOG_OUT';
 export const ERROR = 'ERROR';
 
 
@@ -16,6 +17,21 @@ const LIST_URL = '/userLists';
 const ITEMS_URL = '/listItems/<listId>';
 
 ////////// USER ACTIONS /////////////////
+
+export function userFromToken(tokenFromStorage) {
+    return dispatch => {
+        return fetch(`/userInfoFromToken?token=${tokenFromStorage}`, {
+            method: 'get',
+            headers: {
+                'Authorization': `Bearer ${tokenFromStorage}`
+            }
+        })
+            .then(response => handleErrors(response))
+            .then(response => response.json())
+            .then(payload => dispatch(receiveInformation(payload)))
+            .catch(err => dispatch(errorReceived(err)));
+    }
+}
 
 export function signIn(formInfo) {
     if (!_.isEmpty(formInfo)) {
@@ -26,13 +42,16 @@ export function signIn(formInfo) {
                 body: JSON.stringify(formInfo),
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 credentials: "same-origin"
             })
                 .then(response => handleErrors(response))
                 .then(response => response.json())
-                .then(json => dispatch(receiveInformation(json)))
+                .then(payload => {
+                    localStorage.setItem('jwtToken', payload.token);
+                    dispatch(receiveInformation(payload))
+                })
                 .catch((err) => dispatch(errorReceived(err.message)));
         }
     }
@@ -53,12 +72,20 @@ export function signUp(formInfo) {
             })
                 .then(response => handleErrors(response))
                 .then(response => response.json())
-                .then(json => dispatch(receiveInformation(json)))
-                .catch(err => dispatch(errorReceived(err)));
+                .then(payload => {
+                    localStorage.setItem('jwtToken', payload.token);
+                    dispatch(receiveInformation(payload))
+                })
+                .catch(err => dispatch(errorReceived(err.message)));
         }
     }
 }
 
+export function logOut() {
+    return {
+        type: LOG_OUT,
+    }
+}
 
 function loggingIn() {
     return {
@@ -68,38 +95,40 @@ function loggingIn() {
 
 ////////// LIST ACTIONS /////////////////
 
-export function addList(listInfo) {
+export function addList(listName, tokenFromStorage) {
     return dispatch => {
         dispatch(requestingInformation());
         return fetch(LIST_URL, {
             method: 'post',
-            body: JSON.stringify(listInfo),
+            body: JSON.stringify({name: listName}),
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${tokenFromStorage}`,
             },
             credentials: "same-origin"
         })
             .then(response => response.json())
-            .then(json => dispatch(receiveInformation(json)))
+            .then(payload => dispatch(receiveInformation(payload)))
             .catch(err => dispatch(errorReceived(err)));
     }
 }
 
-export function removeList(listInfo) {
+export function removeList(listId, tokenFromStorage) {
     return dispatch =>{
         dispatch(requestingInformation());
         return fetch(LIST_URL, {
             method: 'delete',
-            body: JSON.stringify(listInfo),
+            body: JSON.stringify({listId: listId}),
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${tokenFromStorage}`
             },
             credentials: "same-origin"
         })
             .then(response => response.json())
-            .then(json => dispatch(receiveInformation(json)))
+            .then(payload => dispatch(receiveInformation(payload)))
             .catch(err => dispatch(errorReceived(err)));
     }
 }
@@ -110,7 +139,7 @@ export function fetchItems(listId) {
         dispatch(requestingInformation());
         return fetch(ITEMS_URL.replace('<listId>',listId))
             .then(response => response.json())
-            .then(json => dispatch(updateItems(json)))
+            .then(payload => dispatch(updateItems(payload)))
             .catch(err => dispatch(errorReceived(err)));
     }
 }
@@ -128,25 +157,25 @@ export function addItem(itemInfo, listId) {
             credentials: "same-origin"
         })
             .then(response => response.json())
-            .then(json => dispatch(updateItems(json)))
+            .then(payload => dispatch(updateItems(payload)))
             .catch((err) => dispatch(errorReceived(err)));
     }
 }
 
-export function removeItem(itemId) {
+export function removeItem(itemId, listId) {
     return dispatch =>{
         dispatch(requestingInformation());
-        return fetch(ITEMS_URL, {
+        return fetch(ITEMS_URL.replace('<listId>',listId), {
             method: 'delete',
             body: JSON.stringify({itemId: itemId}),
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             credentials: "same-origin"
         })
             .then(response => response.json())
-            .then(json => dispatch(updateItems(json)))
+            .then(payload => dispatch(updateItems(payload)))
             .catch(err => dispatch(errorReceived(err)));
     }
 }

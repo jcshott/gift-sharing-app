@@ -6,10 +6,6 @@ import {
 
 // actual component for the list of lists
 class UserErrors extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         if (this.props.error) {
             return (

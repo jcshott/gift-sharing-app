@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { connect } from 'react-redux';
+import { logOut } from '../actions/actions';
 import '../styles/App.css';
 
 class Navbar extends Component {
+
 	render() {
 		return (
 		  <div className="App">
@@ -15,10 +18,29 @@ class Navbar extends Component {
 				 	<NavItem>Go to Your Lists</NavItem>
 				 </LinkContainer>
 			  </Nav>
+			  <Nav pullRight>
+				  <NavItem onClick={this.props.onLogout} href="#">Log Out</NavItem>
+			  </Nav>
 
 		  </div>
 		);
 	}
 }
 
-export default Navbar;
+function mapStateToProps(state) {
+    return {
+        currentUser: state.get('currentUser'),
+    }
+}
+
+function mapDispatchToProps(dispatch){
+	return {
+        onLogout: () => {
+            localStorage.removeItem('jwtToken'); //remove token from storage
+            dispatch(logOut());
+        },
+	}
+
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

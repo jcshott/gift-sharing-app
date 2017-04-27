@@ -1,6 +1,7 @@
 // import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
+import { Link } from 'react-router';
 import ListLink from '../containers/ListLink';
 import NewList from './NewList';
 
@@ -8,6 +9,14 @@ import NewList from './NewList';
 class UserLists extends React.Component {
 
     render() {
+        if (!this.props.currentUser) {
+            return (
+                <div>
+                    <h2>oops! </h2>
+                    <span> Try  <Link to={`/`}> Logging-In! </Link> </span>
+                </div>
+            )
+        }
         return (
             <div>
                 <h1>
@@ -35,10 +44,10 @@ class UserLists extends React.Component {
 }
 
 UserLists.propTypes = {
-  userLists: PropTypes.object.isRequired,
-  onNewListClick: PropTypes.func.isRequired,
-  onRemoveList: PropTypes.func.isRequired,
-  currentUser: PropTypes.object.isRequired,
+  userLists: PropTypes.object,
+  onNewListClick: PropTypes.func,
+  onRemoveList: PropTypes.func,
+  currentUser: PropTypes.object,
 
 };
 

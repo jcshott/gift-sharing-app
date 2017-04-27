@@ -23,7 +23,7 @@ class GiftList extends React.Component {
             </h1>
             {this.props.listItems.map((item) =>
                   <p key={item.get('id')}> {item.get('description')} <Button bsSize="xsmall"
-                                                                             onClick={ e => this.props.onRemoveItem(item.get('id'))}>X</Button>
+                                                                             onClick={ e => this.props.onRemoveItem(item.get('id'), this.props.currentListId)}>X</Button>
                   </p>
               )
             }

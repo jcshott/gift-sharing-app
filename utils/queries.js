@@ -23,7 +23,7 @@ function addUser(userInfo) {
                 resolve(newUser);
             })
             .catch(error => {
-                console.error('error inserting: ', error);
+                console.error('error inserting user: ', error);
                 reject(error);
             });
     });
@@ -90,7 +90,7 @@ function addList(listName, userId) {
                 resolve(userLists);
             })
             .catch(error => {
-                console.error('error inserting: ', error);
+                console.error('error inserting list: ', error);
                 reject(error);
             });
     });
@@ -98,16 +98,16 @@ function addList(listName, userId) {
 
 function removeList(listId){
     return new Promise((resolve, reject) => {
-        db.tx(t => {
-            return t.none('DELETE from items where list_id = $1', listId)
-                .then(() => { return t.none('DELETE from lists where id = $1', listId);
+        db.task(t => {
+            return t.none('DELETE from items where list_id = $1', [listId])
+                .then(() => { return t.none('DELETE from lists where id = $1', [listId]);
             })
         })
             .then(() => {
                 resolve();
             })
             .catch(error => {
-                console.error('error inserting: ', error);
+                console.error('error removing: ', error);
                 reject(error);
             });
     })
@@ -115,7 +115,7 @@ function removeList(listId){
 
 function getListItems(listId){
     return new Promise((resolve, reject) => {
-        db.any("SELECT * from items WHERE list_id = $1", [listId])
+        db.any("SELECT * from items WHERE list_id = $1", listId)
             .then((data) => {
                 resolve(data);
             })
@@ -152,7 +152,7 @@ function removeItem(itemId){
         db.none('DELETE from items where id = $1', itemId)
         .then(() => resolve())
         .catch(error => {
-            console.error('error getting items for list_id: ', itemId);
+            console.error('error removing item: ', itemId);
             reject(error);
         });
     })

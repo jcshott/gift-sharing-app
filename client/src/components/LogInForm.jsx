@@ -69,7 +69,7 @@ class LogInForm extends React.Component {
   }
 
   render() {
-      if (_.isEmpty(this.props.currentUser)) {
+      if (!this.props.currentUser) {
           return this.renderLogInForm(this.props.error);
     }
     return null;

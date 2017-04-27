@@ -14,16 +14,12 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     onNewListClick: (name, userId) => {
-      dispatch(addList({name: name,
-                        userId: userId
-                        })
-      )
+        let token = localStorage.getItem('jwtToken');
+        dispatch(addList(name, token));
   },
     onRemoveList: (listId, userId) => {
-        dispatch(removeList({listId: listId,
-                             userId: userId
-                            })
-        )
+        let token = localStorage.getItem('jwtToken');
+        dispatch(removeList(listId, token));
     },
   }
 }
