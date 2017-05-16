@@ -98,11 +98,7 @@ function addList(listName, userId) {
 
 function removeList(listId){
     return new Promise((resolve, reject) => {
-        db.task(t => {
-            return t.none('DELETE from items where list_id = $1', [listId])
-                .then(() => { return t.none('DELETE from lists where id = $1', [listId]);
-            })
-        })
+        db.none('DELETE from lists where id = $1', [listId])
             .then(() => {
                 resolve();
             })

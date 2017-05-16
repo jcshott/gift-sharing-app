@@ -4,13 +4,20 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import UserErrors from './UserErrors';
 import {Button, Col, ControlLabel, Form, FormControl, FormGroup} from 'react-bootstrap';
-import { signUp } from '../actions/actions';
+import { clearError, signUp } from '../actions/actions';
 
 
 class SignUpForm extends React.Component {
     constructor(props) {
         super(props);
         this.submit = this.submit.bind(this);
+    }
+
+    componentWillMount() {
+        if(this.props.error) {
+            this.props.dispatch(clearError());
+
+        }
     }
 
     submit(e) {

@@ -11,6 +11,7 @@ export const UPDATE_ITEMS = 'UPDATE_ITEMS';
 export const LOGGING_IN = 'LOGGING_IN';
 export const LOG_OUT = 'LOG_OUT';
 export const ERROR = 'ERROR';
+export const CLEAR_ERROR = 'CLEAR_ERROR';
 
 
 const LIST_URL = '/userLists';
@@ -206,6 +207,12 @@ function errorReceived(errorCode) {
     return {
         type: ERROR,
         information: ERROR_CODES[errorCode]
+    }
+}
+
+export function clearError() {
+    return {
+        type: CLEAR_ERROR
     }
 }
 

@@ -16,7 +16,7 @@ class App extends Component {
     render() {
         return (
           <div className="App">
-              <Navbar />
+              <Navbar currentUser={this.props.currentUser}/>
               {this.props.children}
           </div>
 
@@ -27,6 +27,7 @@ class App extends Component {
 function mapStateToProps(state, ownProps) {
     return {
         errors: state.get('errors'),
+        currentUser: state.get('currentUser')
     }
 }
 
