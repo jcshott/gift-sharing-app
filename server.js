@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+const path = require('path');
 
 const app = express();
 const config = require('./config.json');
@@ -20,10 +21,9 @@ if (process.env.NODE_ENV === 'production') {
 // routes
 app.use(require('./routes'));
 
-
-
-//   // res.sendfile((path.resolve(__dirname, '../client', 'build', 'index.html'))
-// });
+app.get('/*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
 
 app.listen(app.get('port'), () => {
     console.log(`Find the server at: http://localhost:${app.get('port')}/`); // eslint-disable-line no-console
